@@ -8,11 +8,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     program = "java";
     arguments << "-jar" << "xoroshiroinverse.jar";
-    xoroshiroinverse->setReadChannelMode(QProcess::SeparateChannels);
-    xoroshiroinverse->setStandardInputFile("filein");
-    xoroshiroinverse->setStandardOutputFile("fileout");
-    xoroshiroinverse->start(program, arguments);
+    xoroshiroinverse->setReadChannelMode(QProcess::MergedChannels);
+    xoroshiroinverse->start(program, QStringList() << arguments);
+    xoroshiroinverse->waitForStarted(1500);
+    xoroshiroinverse->waitForFinished(1500);
+
+    QByteArray output = xoroshiroinverse->readAll();
     ui->setupUi(this);
+    ui->textBrowser->setText(output);
 }
 
 MainWindow::~MainWindow()
