@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QProcess>
+#include <QString>
+#include <QStringList>
+#include <QDebug>
+#include <QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,5 +22,8 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QProcess *xoroshiroinverse;
+    QString program;
+    QStringList arguments;
 };
 #endif // MAINWINDOW_H
