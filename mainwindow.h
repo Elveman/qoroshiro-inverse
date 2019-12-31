@@ -7,6 +7,8 @@
 #include <QStringList>
 #include <QDebug>
 #include <QThread>
+#include <QValidator>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,8 +24,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QMessageBox errBox;
     QProcess *xoroshiroinverse;
     QString program;
     QStringList arguments;
+    QIntValidator IVvalidator;
+private slots:
+    void processInput();
 };
 #endif // MAINWINDOW_H
