@@ -39,9 +39,11 @@ private:
     QProcess *xoroshiroinverse;
     QString program;
     QStringList arguments;
-    QIntValidator IVvalidator;
+    QRegExpValidator IVvalidator;
 private slots:
     void processInput();
     void setNewText();
+    void processExit();
+    void processStop();
 };
 #endif // MAINWINDOW_H

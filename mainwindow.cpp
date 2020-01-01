@@ -1,19 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+// TODO: add label so they could be translated
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     xoroshiroinverse(new QProcess)
 {
-    IVvalidator.setRange(0, 31);
-    program = "java";
-    arguments << "-jar" << "xoroshiroinverse.jar";
-    xoroshiroinverse->setReadChannelMode(QProcess::MergedChannels);
-    xoroshiroinverse->start(program, QStringList() << arguments);
+    IVvalidator.setRegExp(QRegExp("([12]{0,1}[0-9])|([3][01])"));
     ui->setupUi(this);
     connect(ui->calculateButton, SIGNAL(clicked()), this, SLOT(processInput()));
-    // TODO: chenge this mess to promoting the widget to IVLineEdit subclassing the QLineEdit
+    connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(processExit()));
+    connect(ui->stopButton, SIGNAL(clicked()), this, SLOT(processStop()));
+    ui->stopButton->setDisabled(true);
+    // FIXME: change this mess to promoting the widget to IVLineEdit subclassing the QLineEdit
+
     ui->HPLE1_3->setValidator(&IVvalidator);
     ui->AtkLE1_3->setValidator(&IVvalidator);
     ui->DefLE1_3->setValidator(&IVvalidator);
@@ -53,6 +55,7 @@ MainWindow::~MainWindow()
 void MainWindow::processInput()
 {
     // sanity checks
+    // TODO: more comments
     QStringList IVs1_3;
     QStringList IVs1_4;
     QStringList IVs2;
@@ -75,6 +78,8 @@ void MainWindow::processInput()
     bool IVPerfectInputValid;
     int perfectCount;
 
+
+    // FIXME: make a vector of pointers to widgets and provide a reference table
     IVGeneralInputValid =
             ui->HPLE1_3->hasAcceptableInput() & ui->AtkLE1_3->hasAcceptableInput() & ui->DefLE1_3->hasAcceptableInput() &
             ui->SpALE1_3->hasAcceptableInput() & ui->SpDLE1_3->hasAcceptableInput() & ui->SpeLE1_3->hasAcceptableInput() &
@@ -164,6 +169,60 @@ void MainWindow::processInput()
         errBox.exec();
         return;
     }
+
+    // lock the fields
+    // TODO: I seriously need the reference table to fix this mess
+    ui->HPLE1_3->setDisabled(true);
+    ui->AtkLE1_3->setDisabled(true);
+    ui->DefLE1_3->setDisabled(true);
+    ui->SpALE1_3->setDisabled(true);
+    ui->SpDLE1_3->setDisabled(true);
+    ui->SpeLE1_3->setDisabled(true);
+
+    ui->HPLE1_4->setDisabled(true);
+    ui->AtkLE1_4->setDisabled(true);
+    ui->DefLE1_4->setDisabled(true);
+    ui->SpALE1_4->setDisabled(true);
+    ui->SpDLE1_4->setDisabled(true);
+    ui->SpeLE1_4->setDisabled(true);
+
+    ui->HPLE2->setDisabled(true);
+    ui->AtkLE2->setDisabled(true);
+    ui->DefLE2->setDisabled(true);
+    ui->SpALE2->setDisabled(true);
+    ui->SpDLE2->setDisabled(true);
+    ui->SpeLE2->setDisabled(true);
+
+    ui->HPLE3->setDisabled(true);
+    ui->AtkLE3->setDisabled(true);
+    ui->DefLE3->setDisabled(true);
+    ui->SpALE3->setDisabled(true);
+    ui->SpDLE3->setDisabled(true);
+    ui->SpeLE3->setDisabled(true);
+
+    ui->natureCombo1->setDisabled(true);
+    ui->natureCombo2->setDisabled(true);
+    ui->natureCombo3->setDisabled(true);
+
+    ui->abilityCombo1->setDisabled(true);
+    ui->abilityCombo2->setDisabled(true);
+    ui->abilityCombo3->setDisabled(true);
+
+    ui->characteristicCombo1->setDisabled(true);
+
+    ui->starAmountCombo2->setDisabled(true);
+    ui->starAmountCombo3->setDisabled(true);
+
+    ui->HA1->setDisabled(true);
+    ui->HA2->setDisabled(true);
+    ui->HA3->setDisabled(true);
+
+    ui->genderEval1->setDisabled(true);
+    ui->genderEval2->setDisabled(true);
+    ui->genderEval3->setDisabled(true);
+
+    ui->calculateButton->setDisabled(true);
+    ui->stopButton->setDisabled(false);
 
     // now we compile everything we need
     QString IVs1_3Ready = IVs1_3.join(" "); // precise IVs of the 1st raid pokemon
@@ -272,8 +331,18 @@ void MainWindow::processInput()
     inputData << genderEval3;
     inputData << Nature3;
     inputData << ECString;
+
+    ui->consoleBrowser->setText("");
+
+    program = "java";
+    arguments << "-jar" << "xoroshiroinverse.jar";
+    xoroshiroinverse->setReadChannelMode(QProcess::MergedChannels);
+    xoroshiroinverse->start(program, QStringList() << arguments);
+    xoroshiroinverse->waitForStarted(500);
+
     for (QString inputString : inputData) {
         xoroshiroinverse->waitForFinished(100);
+        qDebug() << inputString;
         xoroshiroinverse->write(inputString.toUtf8());
         xoroshiroinverse->write("\n");
     }
@@ -292,6 +361,7 @@ void MainWindow::setNewText()
     ui->consoleBrowser->setText(currBrowser);
 }
 
+// TODO: rewrite in Qt
 MainWindow::vldState MainWindow::checkValidity(QString frameIVs, QString frameIVs4)
 {
             std::regex re(R"((\d+) (\d+) (\d+) (\d+) (\d+) (\d+))");
@@ -345,4 +415,69 @@ MainWindow::vldState MainWindow::checkValidity(QString frameIVs, QString frameIV
             {
                 return Invalid;
             }
+}
+
+void MainWindow::processExit()
+{
+    QCoreApplication::quit();
+}
+
+void MainWindow::processStop()
+{
+    xoroshiroinverse->kill();
+    xoroshiroinverse->waitForFinished(1000);
+    delete xoroshiroinverse;
+    xoroshiroinverse = new QProcess;
+
+    ui->HPLE1_3->setDisabled(false);
+    ui->AtkLE1_3->setDisabled(false);
+    ui->DefLE1_3->setDisabled(false);
+    ui->SpALE1_3->setDisabled(false);
+    ui->SpDLE1_3->setDisabled(false);
+    ui->SpeLE1_3->setDisabled(false);
+
+    ui->HPLE1_4->setDisabled(false);
+    ui->AtkLE1_4->setDisabled(false);
+    ui->DefLE1_4->setDisabled(false);
+    ui->SpALE1_4->setDisabled(false);
+    ui->SpDLE1_4->setDisabled(false);
+    ui->SpeLE1_4->setDisabled(false);
+
+    ui->HPLE2->setDisabled(false);
+    ui->AtkLE2->setDisabled(false);
+    ui->DefLE2->setDisabled(false);
+    ui->SpALE2->setDisabled(false);
+    ui->SpDLE2->setDisabled(false);
+    ui->SpeLE2->setDisabled(false);
+
+    ui->HPLE3->setDisabled(false);
+    ui->AtkLE3->setDisabled(false);
+    ui->DefLE3->setDisabled(false);
+    ui->SpALE3->setDisabled(false);
+    ui->SpDLE3->setDisabled(false);
+    ui->SpeLE3->setDisabled(false);
+
+    ui->natureCombo1->setDisabled(false);
+    ui->natureCombo2->setDisabled(false);
+    ui->natureCombo3->setDisabled(false);
+
+    ui->abilityCombo1->setDisabled(false);
+    ui->abilityCombo2->setDisabled(false);
+    ui->abilityCombo3->setDisabled(false);
+
+    ui->characteristicCombo1->setDisabled(false);
+
+    ui->starAmountCombo2->setDisabled(false);
+    ui->starAmountCombo3->setDisabled(false);
+
+    ui->HA1->setDisabled(false);
+    ui->HA2->setDisabled(false);
+    ui->HA3->setDisabled(false);
+
+    ui->genderEval1->setDisabled(false);
+    ui->genderEval2->setDisabled(false);
+    ui->genderEval3->setDisabled(false);
+
+    ui->calculateButton->setDisabled(false);
+    ui->stopButton->setDisabled(true);
 }
