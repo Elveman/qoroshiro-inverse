@@ -9,6 +9,10 @@
 #include <QThread>
 #include <QValidator>
 #include <QMessageBox>
+#include <iterator>
+#include <string>
+#include <vector>
+#include <regex>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,11 +22,18 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    enum vldState {
+        Invalid,
+        Valid,
+        NotValid4IV
+    };
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
+    vldState checkValidity(QString frameIVs, QString frameIVs4);
     Ui::MainWindow *ui;
     QMessageBox errBox;
     QProcess *xoroshiroinverse;
@@ -31,5 +42,6 @@ private:
     QIntValidator IVvalidator;
 private slots:
     void processInput();
+    void setNewText();
 };
 #endif // MAINWINDOW_H
