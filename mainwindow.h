@@ -9,10 +9,7 @@
 #include <QThread>
 #include <QValidator>
 #include <QMessageBox>
-#include <iterator>
-#include <string>
-#include <vector>
-#include <regex>
+#include <QRegExp>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

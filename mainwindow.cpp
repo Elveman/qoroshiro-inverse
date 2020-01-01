@@ -361,37 +361,35 @@ void MainWindow::setNewText()
     ui->consoleBrowser->setText(currBrowser);
 }
 
-// TODO: rewrite in Qt
 MainWindow::vldState MainWindow::checkValidity(QString frameIVs, QString frameIVs4)
 {
-            std::regex re(R"((\d+) (\d+) (\d+) (\d+) (\d+) (\d+))");
-            std::string currentIVs = frameIVs.toStdString();
-            std::string currentIVs4 = frameIVs4.toStdString();
-            std::vector<int> currentIVsMod8 = {-1, -1, -1, -1, -1, -1};
-            std::vector<int> currentPerfectIVs = {-1, -1, -1, -1, -1, -1};
+            QRegExp re("([12]{0,1}[0-9])|([3][01]) ([12]{0,1}[0-9])|([3][01]) ([12]{0,1}[0-9])|([3][01]) ([12]{0,1}[0-9])|([3][01]) ([12]{0,1}[0-9])|([3][01]) ([12]{0,1}[0-9])|([3][01])");
+            QString currentIVs = frameIVs;
+            QString currentIVs4 = frameIVs4;
+            QVector<int> currentIVsMod8 = {-1, -1, -1, -1, -1, -1};
+            QVector<int> currentPerfectIVs = {-1, -1, -1, -1, -1, -1};
             std::vector<std::string> statNames = {"HP", "Atk", "Def", "SpA", "SpD", "Spe"};
             int perfectIVcount = 0;
             int skipAmount = 0;
             int lastReroll = -1;
             bool IVmatchFlag4 = true;
-            std::istringstream iss(currentIVs);
-            std::vector<int> currentIVnums(std::istream_iterator<int>{iss}, std::istream_iterator<int>());
+            QStringList currentIVnums = currentIVs.split(" ");
             for (int i = 0; i < 6; i++) // check for errors
             {
-                if (currentIVnums[i] == 31)
+                if (currentIVnums.at(i) == "31")
                 {
                     perfectIVcount++;
                     currentPerfectIVs[i] = 1;
                 }
-                currentIVsMod8[i] = currentIVnums[i] % 8;
+                currentIVsMod8[i] = currentIVnums.at(i).toInt() % 8;
             }
             for (int i = 0; i < 6; i++) // check validity
             {
-                if (currentPerfectIVs[i] == 1)
+                if (currentPerfectIVs.at(i) == 1)
                 {
                     continue;
                 }
-                if ((currentIVsMod8[i] >= 6) || (currentPerfectIVs[currentIVsMod8[i]] == 1))
+                if ((currentIVsMod8.at(i) >= 6) || (currentPerfectIVs.at(currentIVsMod8.at(i)) == 1))
                 {
                     skipAmount++;
                 } else
@@ -405,7 +403,7 @@ MainWindow::vldState MainWindow::checkValidity(QString frameIVs, QString frameIV
                 currentPerfectIVs[currentIVsMod8[lastReroll]] = 1;
                 for (int i = 0; i < 6; i++)
                 {
-                    if ((currentPerfectIVs[i] == 1) & (QString::fromStdString(currentIVs4).split(" ").at(i) != "31"))
+                    if ((currentPerfectIVs.at(i) == 1) & (currentIVs4.split(" ").at(i) != "31"))
                     {
                         IVmatchFlag4= false;
                     }
