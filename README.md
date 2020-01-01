@@ -3,7 +3,7 @@ GUI for xoroshiro-inverse (https://github.com/pattirudon/xoroshiro-inverse) writ
 
 # Prerequisites
 
-Windows users must have Java installed, and pattirudon's [xoroshiroinverse.jar](https://github.com/pattirudon/xoroshiro-inverse/blob/master/xoroshiroinverse.jar?raw=true) (ver. 1.3) in the same folder as the executable. Linux users must have Qt libraries and Java installed and xoroshiroinverse.jar (ver. 1.3) in the same folder as the executable.
+Windows users must have Java installed, and pattirudon's [xoroshiroinverse.jar](https://github.com/pattirudon/xoroshiro-inverse/blob/master/xoroshiroinverse.jar?raw=true) (ver. 1.3) in the same folder as the executable. Linux users must have Qt libraries and Java installed and [xoroshiroinverse.jar](https://github.com/pattirudon/xoroshiro-inverse/blob/master/xoroshiroinverse.jar?raw=true) (ver. 1.3) in the same folder as the executable.
 
 # Usage
 
