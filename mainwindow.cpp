@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(processExit()));
     connect(ui->stopButton, SIGNAL(clicked()), this, SLOT(processStop()));
     ui->stopButton->setDisabled(true);
+    ui->possibleSeedLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
     // FIXME: change this mess to promoting the widget to IVLineEdit subclassing the QLineEdit
     IVLERefTable =
     {
@@ -39,6 +41,7 @@ void MainWindow::processInput()
 {
     // sanity checks
     // TODO: more comments
+
     QStringList IVs1_3;
     QStringList IVs1_4;
     QStringList IVs2;
@@ -282,6 +285,7 @@ void MainWindow::processInput()
     inputData << Nature3;
     inputData << ECString;
 
+    ui->possibleSeedLabel->setText("Your seed should appear here, if found");
     ui->consoleBrowser->setText("");
 
     program = "java";
@@ -305,10 +309,16 @@ void MainWindow::processInput()
 void MainWindow::setNewText()
 {
     xoroshiroinverse->waitForFinished(100);
+    QRegExp seedRegExp("[0][x]([0-9A-Fa-f]{16,16})");
     QByteArray output = xoroshiroinverse->readAll();
     QByteArray currBrowser = ui->consoleBrowser->toPlainText().toUtf8();
     currBrowser.append(output);
     ui->consoleBrowser->setText(currBrowser);
+    if (QString(currBrowser).contains(seedRegExp))
+    {
+        seedRegExp.indexIn(QString(currBrowser));
+        ui->possibleSeedLabel->setText(seedRegExp.capturedTexts().at(0));
+    }
 }
 
 MainWindow::vldState MainWindow::checkValidity(QString frameIVs, QString frameIVs4)
