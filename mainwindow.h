@@ -10,6 +10,8 @@
 #include <QValidator>
 #include <QMessageBox>
 #include <QRegExp>
+#include <QVector>
+#include <QLineEdit>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,6 +39,7 @@ private:
     QString program;
     QStringList arguments;
     QRegExpValidator IVvalidator;
+    QVector<QLineEdit*> IVLERefTable;
 private slots:
     void processInput();
     void setNewText();

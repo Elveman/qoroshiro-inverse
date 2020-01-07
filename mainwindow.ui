@@ -951,6 +951,51 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>HPLE1_3</tabstop>
+  <tabstop>AtkLE1_3</tabstop>
+  <tabstop>DefLE1_3</tabstop>
+  <tabstop>SpALE1_3</tabstop>
+  <tabstop>SpDLE1_3</tabstop>
+  <tabstop>SpeLE1_3</tabstop>
+  <tabstop>natureCombo1</tabstop>
+  <tabstop>genderEval1</tabstop>
+  <tabstop>HA1</tabstop>
+  <tabstop>abilityCombo1</tabstop>
+  <tabstop>HPLE1_4</tabstop>
+  <tabstop>AtkLE1_4</tabstop>
+  <tabstop>DefLE1_4</tabstop>
+  <tabstop>SpALE1_4</tabstop>
+  <tabstop>SpDLE1_4</tabstop>
+  <tabstop>SpeLE1_4</tabstop>
+  <tabstop>characteristicCombo1</tabstop>
+  <tabstop>HPLE2</tabstop>
+  <tabstop>AtkLE2</tabstop>
+  <tabstop>DefLE2</tabstop>
+  <tabstop>SpALE2</tabstop>
+  <tabstop>SpDLE2</tabstop>
+  <tabstop>SpeLE2</tabstop>
+  <tabstop>natureCombo2</tabstop>
+  <tabstop>genderEval2</tabstop>
+  <tabstop>HA2</tabstop>
+  <tabstop>abilityCombo2</tabstop>
+  <tabstop>starAmountCombo2</tabstop>
+  <tabstop>HPLE3</tabstop>
+  <tabstop>AtkLE3</tabstop>
+  <tabstop>DefLE3</tabstop>
+  <tabstop>SpALE3</tabstop>
+  <tabstop>SpDLE3</tabstop>
+  <tabstop>SpeLE3</tabstop>
+  <tabstop>natureCombo3</tabstop>
+  <tabstop>genderEval3</tabstop>
+  <tabstop>HA3</tabstop>
+  <tabstop>abilityCombo3</tabstop>
+  <tabstop>starAmountCombo3</tabstop>
+  <tabstop>calculateButton</tabstop>
+  <tabstop>stopButton</tabstop>
+  <tabstop>exitButton</tabstop>
+  <tabstop>consoleBrowser</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

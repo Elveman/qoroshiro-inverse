@@ -15,34 +15,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->stopButton, SIGNAL(clicked()), this, SLOT(processStop()));
     ui->stopButton->setDisabled(true);
     // FIXME: change this mess to promoting the widget to IVLineEdit subclassing the QLineEdit
+    IVLERefTable =
+    {
+        ui->HPLE1_3, ui->AtkLE1_3, ui->DefLE1_3, ui->SpALE1_3, ui->SpDLE1_3, ui->SpeLE1_3, // div 6 = 0
+        ui->HPLE1_4, ui->AtkLE1_4, ui->DefLE1_4, ui->SpALE1_4, ui->SpDLE1_4, ui->SpeLE1_4, // div 6 = 1
+        ui->HPLE2, ui->AtkLE2, ui->DefLE2, ui->SpALE2, ui->SpDLE2, ui->SpeLE2, // div 6 = 2
+        ui->HPLE3, ui->AtkLE3, ui->DefLE3, ui->SpALE3, ui->SpDLE3, ui->SpeLE3 // div 6 = 3
+    };
 
-    ui->HPLE1_3->setValidator(&IVvalidator);
-    ui->AtkLE1_3->setValidator(&IVvalidator);
-    ui->DefLE1_3->setValidator(&IVvalidator);
-    ui->SpALE1_3->setValidator(&IVvalidator);
-    ui->SpDLE1_3->setValidator(&IVvalidator);
-    ui->SpeLE1_3->setValidator(&IVvalidator);
-
-    ui->HPLE1_4->setValidator(&IVvalidator);
-    ui->AtkLE1_4->setValidator(&IVvalidator);
-    ui->DefLE1_4->setValidator(&IVvalidator);
-    ui->SpALE1_4->setValidator(&IVvalidator);
-    ui->SpDLE1_4->setValidator(&IVvalidator);
-    ui->SpeLE1_4->setValidator(&IVvalidator);
-
-    ui->HPLE2->setValidator(&IVvalidator);
-    ui->AtkLE2->setValidator(&IVvalidator);
-    ui->DefLE2->setValidator(&IVvalidator);
-    ui->SpALE2->setValidator(&IVvalidator);
-    ui->SpDLE2->setValidator(&IVvalidator);
-    ui->SpeLE2->setValidator(&IVvalidator);
-
-    ui->HPLE3->setValidator(&IVvalidator);
-    ui->AtkLE3->setValidator(&IVvalidator);
-    ui->DefLE3->setValidator(&IVvalidator);
-    ui->SpALE3->setValidator(&IVvalidator);
-    ui->SpDLE3->setValidator(&IVvalidator);
-    ui->SpeLE3->setValidator(&IVvalidator);
+    for (auto IVLE : IVLERefTable) {
+        IVLE->setValidator(&IVvalidator);
+    }
     // ui->consoleBrowser->setText(output);
 }
 
@@ -61,16 +44,12 @@ void MainWindow::processInput()
     QStringList IVs2;
     QStringList IVs3;
 
-    IVs1_3 << ui->HPLE1_3->text() << ui->AtkLE1_3->text() << ui->DefLE1_3->text() <<
-              ui->SpALE1_3->text() << ui->SpDLE1_3->text() << ui->SpeLE1_3->text();
-    IVs1_4 << ui->HPLE1_4->text() << ui->AtkLE1_4->text() << ui->DefLE1_4->text() <<
-              ui->SpALE1_4->text() << ui->SpDLE1_4->text() << ui->SpeLE1_4->text();
-    IVs2 << ui->HPLE2->text() << ui->AtkLE2->text() << ui->DefLE2->text() <<
-              ui->SpALE2->text() << ui->SpDLE2->text() << ui->SpeLE2->text();
-    IVs3 << ui->HPLE3->text() << ui->AtkLE3->text() << ui->DefLE3->text() <<
-              ui->SpALE3->text() << ui->SpDLE3->text() << ui->SpeLE3->text();
+    for (int i = 0; i < 6; i++) IVs1_3 << IVLERefTable.at(i)->text();
+    for (int i = 6; i < 12; i++) IVs1_4 << IVLERefTable.at(i)->text();
+    for (int i = 12; i < 18; i++) IVs2 << IVLERefTable.at(i)->text();
+    for (int i = 18; i < 24; i++) IVs3 << IVLERefTable.at(i)->text();
 
-    bool IVGeneralInputValid;
+    bool IVGeneralInputValid = true;
     bool HAInputCompatible;
     QStringList charCompare;
     charCompare << "31" << IVs1_4;
@@ -80,15 +59,9 @@ void MainWindow::processInput()
 
 
     // FIXME: make a vector of pointers to widgets and provide a reference table
-    IVGeneralInputValid =
-            ui->HPLE1_3->hasAcceptableInput() & ui->AtkLE1_3->hasAcceptableInput() & ui->DefLE1_3->hasAcceptableInput() &
-            ui->SpALE1_3->hasAcceptableInput() & ui->SpDLE1_3->hasAcceptableInput() & ui->SpeLE1_3->hasAcceptableInput() &
-            ui->HPLE1_4->hasAcceptableInput() & ui->AtkLE1_4->hasAcceptableInput() & ui->DefLE1_4->hasAcceptableInput() &
-            ui->SpALE1_4->hasAcceptableInput() & ui->SpDLE1_4->hasAcceptableInput() & ui->SpeLE1_4->hasAcceptableInput() &
-            ui->HPLE2->hasAcceptableInput() & ui->AtkLE2->hasAcceptableInput() & ui->DefLE2->hasAcceptableInput() &
-            ui->SpALE2->hasAcceptableInput() & ui->SpDLE2->hasAcceptableInput() & ui->SpeLE2->hasAcceptableInput() &
-            ui->HPLE3->hasAcceptableInput() & ui->AtkLE3->hasAcceptableInput() & ui->DefLE3->hasAcceptableInput() &
-            ui->SpALE3->hasAcceptableInput() & ui->SpDLE3->hasAcceptableInput() & ui->SpeLE3->hasAcceptableInput();
+    for (auto IVLE : IVLERefTable) {
+        IVGeneralInputValid &= IVLE->hasAcceptableInput();
+    }
 
     if(!IVGeneralInputValid)
     {
@@ -172,33 +145,9 @@ void MainWindow::processInput()
 
     // lock the fields
     // TODO: I seriously need the reference table to fix this mess
-    ui->HPLE1_3->setDisabled(true);
-    ui->AtkLE1_3->setDisabled(true);
-    ui->DefLE1_3->setDisabled(true);
-    ui->SpALE1_3->setDisabled(true);
-    ui->SpDLE1_3->setDisabled(true);
-    ui->SpeLE1_3->setDisabled(true);
-
-    ui->HPLE1_4->setDisabled(true);
-    ui->AtkLE1_4->setDisabled(true);
-    ui->DefLE1_4->setDisabled(true);
-    ui->SpALE1_4->setDisabled(true);
-    ui->SpDLE1_4->setDisabled(true);
-    ui->SpeLE1_4->setDisabled(true);
-
-    ui->HPLE2->setDisabled(true);
-    ui->AtkLE2->setDisabled(true);
-    ui->DefLE2->setDisabled(true);
-    ui->SpALE2->setDisabled(true);
-    ui->SpDLE2->setDisabled(true);
-    ui->SpeLE2->setDisabled(true);
-
-    ui->HPLE3->setDisabled(true);
-    ui->AtkLE3->setDisabled(true);
-    ui->DefLE3->setDisabled(true);
-    ui->SpALE3->setDisabled(true);
-    ui->SpDLE3->setDisabled(true);
-    ui->SpeLE3->setDisabled(true);
+    for (auto IVLE : IVLERefTable) {
+        IVLE->setDisabled(true);
+    }
 
     ui->natureCombo1->setDisabled(true);
     ui->natureCombo2->setDisabled(true);
@@ -222,6 +171,7 @@ void MainWindow::processInput()
     ui->genderEval3->setDisabled(true);
 
     ui->calculateButton->setDisabled(true);
+    // enable Stop button
     ui->stopButton->setDisabled(false);
 
     // now we compile everything we need
@@ -427,33 +377,9 @@ void MainWindow::processStop()
     delete xoroshiroinverse;
     xoroshiroinverse = new QProcess;
 
-    ui->HPLE1_3->setDisabled(false);
-    ui->AtkLE1_3->setDisabled(false);
-    ui->DefLE1_3->setDisabled(false);
-    ui->SpALE1_3->setDisabled(false);
-    ui->SpDLE1_3->setDisabled(false);
-    ui->SpeLE1_3->setDisabled(false);
-
-    ui->HPLE1_4->setDisabled(false);
-    ui->AtkLE1_4->setDisabled(false);
-    ui->DefLE1_4->setDisabled(false);
-    ui->SpALE1_4->setDisabled(false);
-    ui->SpDLE1_4->setDisabled(false);
-    ui->SpeLE1_4->setDisabled(false);
-
-    ui->HPLE2->setDisabled(false);
-    ui->AtkLE2->setDisabled(false);
-    ui->DefLE2->setDisabled(false);
-    ui->SpALE2->setDisabled(false);
-    ui->SpDLE2->setDisabled(false);
-    ui->SpeLE2->setDisabled(false);
-
-    ui->HPLE3->setDisabled(false);
-    ui->AtkLE3->setDisabled(false);
-    ui->DefLE3->setDisabled(false);
-    ui->SpALE3->setDisabled(false);
-    ui->SpDLE3->setDisabled(false);
-    ui->SpeLE3->setDisabled(false);
+    for (auto IVLE : IVLERefTable) {
+        IVLE->setDisabled(false);
+    }
 
     ui->natureCombo1->setDisabled(false);
     ui->natureCombo2->setDisabled(false);
