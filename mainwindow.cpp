@@ -309,7 +309,7 @@ void MainWindow::processInput()
 void MainWindow::setNewText()
 {
     xoroshiroinverse->waitForFinished(100);
-    QRegExp seedRegExp("[0][x]([0-9A-Fa-f]{16,16})");
+    QRegExp seedRegExp("[0][x]([0-9A-Fa-f]{1,16})");
     QByteArray output = xoroshiroinverse->readAll();
     QByteArray currBrowser = ui->consoleBrowser->toPlainText().toUtf8();
     currBrowser.append(output);
@@ -318,7 +318,9 @@ void MainWindow::setNewText()
     {
         seedRegExp.indexIn(QString(currBrowser));
         ui->possibleSeedLabel->setText(seedRegExp.capturedTexts().at(0));
+        processStop();
     }
+    if (QString(currBrowser).contains("finish")) processStop();
 }
 
 MainWindow::vldState MainWindow::checkValidity(QString frameIVs, QString frameIVs4)
